@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Disease Prediction</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Multiple Disease Prediction System</h2>
+            <ul>
+                <li class="active" onclick="changeContent('Diabetes')">Diabetes Prediction</li>
+                <li onclick="changeContent('HeartDisease')">Heart Disease Prediction</li>
+                <li onclick="changeContent('Parkinsons')">Parkinson’s Prediction</li>
+                <li onclick="changeContent('CKD')">Chronic Kidney Disease Prediction</li>
+                <li onclick="changeContent('Liver')">Liver Disease Prediction</li>
+                <a href="{{ url_for('symp') }}"><li>Symptoms Based Disease Prediction</li></a>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <h1 id="disease-title">Diabetes Prediction using ML</h1>
+            <div id="form-container"></div>
+            <button type="submit" onclick="submitForm(event, selectedDisease)">Test Result</button>
+            <p id="result"></p>
+            <div id="chart-container">
+                <canvas id="diseaseChart"></canvas>
+            </div>
+        </main>
+    </div>
+    <script src="../static/script.js"></script>
+</body>
+
+</html>
