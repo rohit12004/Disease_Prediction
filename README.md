@@ -24,7 +24,7 @@ and symptoms based model.
 - **Symptom-Based Prediction**: Predict diseases based on selected symptoms.
 - **Model Training**: Train models using various algorithms (SVM, Random Forest, Logistic Regression, etc.).
 - **Visualization**: Display prediction probabilities and feature importance.
-
+- **Probability**: Displays the probability of the predicted disease disease to be true .
 ## Models
 - **Diabetes Prediction**: Uses the PIMA Diabetes dataset.
 - **CKD Prediction**: Uses the CKD dataset.

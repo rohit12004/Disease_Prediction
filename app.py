@@ -43,7 +43,19 @@ def predictfromsymptoms():
     predicted_label = symptoms_model.predict([input_vector])
     predicted_disease = label_encoder.inverse_transform([predicted_label])[0]
 
-    return jsonify({'predicted_disease': predicted_disease})
+    probabilities = symptoms_model.predict_proba([input_vector])[0]  
+   
+    predicted_label = symptoms_model.predict([input_vector])[0]
+    predicted_class_index = predicted_label 
+  
+    predicted_disease_probability = probabilities[predicted_class_index]
+   
+    # print(f"Probability of predicted disease: {predicted_disease_probability}")
+
+    return jsonify({
+        'predicted_disease': predicted_disease,
+        'Probability': round(predicted_disease_probability * 100, 2)
+        })
 
 
 

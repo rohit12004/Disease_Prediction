@@ -67,7 +67,8 @@
             });
 
             const result = await response.json();
-            document.getElementById('result').innerHTML = `<h2>Predicted Disease: ${result.predicted_disease}</h2>`;
+            document.getElementById('result').innerHTML = `<h2> You May Have ${result.predicted_disease}</h2><br>
+            <h2> Probability: ${result.Probability}</h2>`;
         });
     </script>
 </body>
