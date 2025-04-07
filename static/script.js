@@ -34,6 +34,8 @@ function changeContent(disease) {
     document.getElementById("chart-container").style.display = "none";
 }
 
+
+
 async function submitForm(event, disease) {
     event.preventDefault();
     let inputs = document.querySelectorAll(".input-field");

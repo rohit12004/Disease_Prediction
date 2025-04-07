@@ -22,7 +22,8 @@ def home():
 
 @app.route('/symp')
 def symp():
-    return render_template('symptoms.html',symptoms_list=symptoms_list)
+    sorted_symptoms = sorted(symptoms_list)
+    return render_template('symptoms.html',symptoms_list=sorted_symptoms)
 
 @app.route('/predictfromsymptoms', methods=['POST'])
 def predictfromsymptoms():
