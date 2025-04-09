@@ -66,8 +66,26 @@ label{
     border-radius: 50px;
     color: white ;
     left: 40px;
+    cursor: pointer;
 }
 
-button{
+#buttons{
+    display: flex;
+    gap: 30px;
+}
+
+#clearBtn,#predictBtn{
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background: blue;
+    border: none;
+    border-radius: 50px;
+    color: white ;
     cursor: pointer;
+}
+
+li{
+    margin-top: 20px;
+    margin-left: 5px;
 }

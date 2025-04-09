@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
     <title>Disease Prediction System</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
     <link rel="stylesheet" href="../static/styles2.css">
 </head>
 
@@ -27,50 +27,239 @@
             <br>
             {% endfor %}
 
-
-            <button type="submit" id="submit">Predict Disease</button>
+            <div id="buttons">
+                <button type="submit" id="predictBtn">Predict Disease</button>
+                <button type="button" id="clearBtn">Clear</button>
+            </div>
+            
         </form>
 
         <div id="result"></div>
     </div>
 
     <script>
-        document.getElementById('symptomForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById('symptomForm');
+            const predictBtn = document.getElementById('predictBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const resultDiv = document.getElementById('result');
+            const dropdowns = [];
+    
+            // Collect all dropdown elements
+            for (let i = 1; i <= 6; i++) {
+                dropdowns.push(document.getElementById(`symptom${i}`));
+            }
+    
+            // Function to update dropdown options to avoid duplicate selections
+            function updateDropdownOptions() {
+                const selectedValues = dropdowns.map(dropdown => dropdown.value);
+    
+                dropdowns.forEach(currentDropdown => {
+                    const currentValue = currentDropdown.value;
+                    const options = currentDropdown.querySelectorAll("option");
+    
+                    options.forEach(option => {
+                        if (option.value === "" || option.value === currentValue) {
+                            option.disabled = false;
+                        } else if (selectedValues.includes(option.value)) {
+                            option.disabled = true;
+                        } else {
+                            option.disabled = false;
+                        }
+                    });
+                });
+            }
+    
+            // Attach change event to each dropdown
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener("change", updateDropdownOptions);
+            });
+    
+            // Handle form submission
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+    
+                const symptoms = [];
+                let selectedCount = 0;
+    
+                for (let i = 0; i < 6; i++) {
+                    const symptom = dropdowns[i].value;
+                    if (symptom) {
+                        symptoms.push(symptom);
+                        selectedCount++;
+                    } else {
+                        symptoms.push("0");
+                    }
+                }
+    
+                if (selectedCount < 3) {
+                    alert("Please choose at least 3 symptoms.");
+                    return;
+                }
+    
+                try {
+                    const response = await fetch('/predictfromsymptoms', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ symptoms: symptoms })
+                    });
+    
+                    const result = await response.json();
+    
+                    resultDiv.innerHTML = `<h2> You May Have ${result.predicted_disease}</h2><br>
+                    <h2> Probability: ${result.Probability}</h2>`;
+                } catch (error) {
+                    resultDiv.innerHTML = `<p style="color:red;">Error predicting disease. Please try again later.</p>`;
+                    console.error("Prediction error:", error);
+                }
+            });
+    
+            // Clear button logic
+            clearBtn.addEventListener('click', function () {
+                dropdowns.forEach(dropdown => {
+                    dropdown.selectedIndex = 0;
+                });
+                resultDiv.innerHTML = '';
+                updateDropdownOptions(); // Refresh available options
+            });
+        });
+    </script>
+    
+    
+    
+</body>
 
-            const symptoms = [];
-            let selectedCount = 0;
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Disease Prediction System</title>
+    <link rel="stylesheet" href="../static/styles2.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="{{url_for('home')}}"><button id="home">Home</button></a>
+        <h1>Symptom Based Disease Prediction System</h1>
+        <form id="symptomForm">
+
+            {% for i in range(1, 7) %}
+            <div class="dropdown">
+                <label for="symptom{{ i }}">Symptom {{ i }}:</label>
+                <select name="symptom{{ i }}" id="symptom{{ i }}">
+                    <option value="" disabled selected>Select Symptom</option>
+                    {% for symptom in symptoms_list %}
+                    <option value="{{ symptom }}">{{ symptom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            {% endfor %}
+
+            <div id="buttons">
+                <button type="submit" id="predictBtn">Predict Disease</button>
+                <button type="button" id="clearBtn">Clear</button>
+            </div>
+
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById('symptomForm');
+            const predictBtn = document.getElementById('predictBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const resultDiv = document.getElementById('result');
+            const dropdowns = [];
 
             for (let i = 1; i <= 6; i++) {
-                const symptom = document.getElementById(`symptom${i}`).value;
-                if (symptom) {
-                    symptoms.push(symptom)
-                    selectedCount++;
-                }
-                else {
-                    symptoms.push("0")
-                }
+                dropdowns.push(document.getElementById(`symptom${i}`));
             }
 
-            if (selectedCount < 3) {
-                // document.getElementById('result').innerText = "Please choose at least 3 symptoms.";
-                alert("Please choose at least 3 symptoms.")
-                return;
+            function updateDropdownOptions() {
+                const selectedValues = dropdowns.map(dropdown => dropdown.value);
+                dropdowns.forEach(currentDropdown => {
+                    const currentValue = currentDropdown.value;
+                    const options = currentDropdown.querySelectorAll("option");
+                    options.forEach(option => {
+                        if (option.value === "" || option.value === currentValue) {
+                            option.disabled = false;
+                        } else if (selectedValues.includes(option.value)) {
+                            option.disabled = true;
+                        } else {
+                            option.disabled = false;
+                        }
+                    });
+                });
             }
 
-            const response = await fetch('/predictfromsymptoms', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ symptoms: symptoms })
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener("change", updateDropdownOptions);
             });
 
-            const result = await response.json();
-            document.getElementById('result').innerHTML = `<h2> You May Have ${result.predicted_disease}</h2><br>
-            <h2> Probability: ${result.Probability}</h2>`;
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+
+                const symptoms = [];
+                let selectedCount = 0;
+
+                for (let i = 0; i < 6; i++) {
+                    const symptom = dropdowns[i].value;
+                    if (symptom) {
+                        symptoms.push(symptom);
+                        selectedCount++;
+                    } else {
+                        symptoms.push("0");
+                    }
+                }
+
+                if (selectedCount < 3) {
+                    alert("Please choose at least 3 symptoms.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/predictfromsymptoms', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ symptoms: symptoms })
+                    });
+
+                    const result = await response.json();
+
+                    let html = "<h2>Top 3 Possible Diseases and Probability:</h2><ol>";
+                    result.top_3_diseases.forEach(d => {
+                        html += `<li><strong>${d.disease}</strong> - ${d.probability}%</li>`;
+                    });
+                    html += "</ol>";
+                    resultDiv.innerHTML = html;
+
+                } catch (error) {
+                    resultDiv.innerHTML = `<p style="color:red;">Error predicting disease. Please try again later.</p>`;
+                    console.error("Prediction error:", error);
+                }
+            });
+
+            clearBtn.addEventListener('click', function () {
+                dropdowns.forEach(dropdown => {
+                    dropdown.selectedIndex = 0;
+                });
+                resultDiv.innerHTML = '';
+                updateDropdownOptions();
+            });
         });
     </script>
 </body>
 
 </html>
+
+
