@@ -148,3 +148,29 @@ a {
     padding: 40px 30px;
 
 }
+.gender-radio{
+    font-size: 18px;
+}
+
+.gender-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust this to control spacing between 'Gender:' and the buttons */
+    margin-bottom: 10px;
+}
+
+.gender-label {
+    font-weight: bold;
+    margin: 0;
+}
+
+.gender-radio {
+    display: flex;
+    gap: 10px; /* Space between Male and Female */
+}
+
+.gender-option {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Space between radio button and label */
+}
